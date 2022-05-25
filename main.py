@@ -4,7 +4,8 @@ x = symbols("x")
 b = symbols("b")
 
 
-def get_tangent(f, x_val, y_val):
+def get_tangent(f: Function, x_val: int, y_val: int) -> Function:
+    '''Returns a function tangent to the provided function at the provided point'''
     deriv = Derivative(f, x).doit()
     slope = deriv.evalf(subs={x: x_val})
     b_val = solve(slope * x_val + b - y_val, b)[0]
@@ -12,24 +13,27 @@ def get_tangent(f, x_val, y_val):
     return tangent
 
 
-def show_approx(line: Function, guess_x: int, guess_y: int, iterations=3) -> int:
+def show_approx(line: Function, guess_x: int, iterations=3) -> int:
+    '''Displays and prints the approximated root of the given function'''
     root = guess_x
     lines = []
     for _ in range(iterations):
         y_root = line.evalf(subs={x: root})
         tangent = get_tangent(line, root, y_root)
         root = solve(tangent, x)[0]
-        lines.append((tangent, (x, root, guess_x + 5)))
-    plot_iterations((line, (x, -guess_x - 5, guess_x + 5)), lines)
+        lines.append(tangent)
+    dct = {'function': line, 'range': [-1000, 1000]}
+    plot_iterations(dct, lines)
     return solve(lines[-1][0], x)[0]
 
 
-def plot_iterations(parent: tuple, lines: list):
-    p1 = plot(parent[0], parent[1], show=False)
+def plot_iterations(parent: dict, lines: list) -> None:
+    '''Displays all of the provided functions'''
+    parent_line = parent['function']
+    ylim = parent['range']
+    p1 = plot(parent_line, show=False, ylim=ylim)
     for line in lines:
-        function = line[0]
-        rng = line[1]
-        p = plot(function, rng, show=False)
+        p = plot(line, show=False)
         p1.append(p[0])
     p1.show()
 
@@ -37,8 +41,7 @@ def plot_iterations(parent: tuple, lines: list):
 if __name__ == "__main__":
     parabola = x ** 3 - 2 * x - 20
     guess_x = 5
-    guess_y = parabola.evalf(subs={x: guess_x})
-    approximation = show_approx(parabola, guess_x, guess_y, iterations=4)
+    approximation = show_approx(parabola, guess_x, iterations=4)
     actual = RootOf(parabola, 0).evalf()
     print("Approximation: " + str(approximation))
     print("Actual: " + str(actual))
