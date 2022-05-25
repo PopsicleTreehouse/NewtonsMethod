@@ -1,5 +1,4 @@
 from sympy import symbols, Derivative, plot, Function, RootOf, solve
-import sympy
 
 x = symbols("x")
 b = symbols("b")
@@ -41,7 +40,7 @@ def plot_iterations(parent: dict, lines: list) -> None:
 
 if __name__ == "__main__":
     parabola = x ** 3 - 2 * x - 20
-    guess_x = 5
+    guess_x = 4
     approximation = show_approx(parabola, guess_x, iterations=4)
     actual = RootOf(parabola, 0).evalf()
     print("Approximation: " + str(approximation))
