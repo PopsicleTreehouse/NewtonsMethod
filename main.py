@@ -1,4 +1,5 @@
 from sympy import symbols, Derivative, plot, Function, RootOf, solve
+import sympy
 
 x = symbols("x")
 b = symbols("b")
@@ -24,7 +25,7 @@ def show_approx(line: Function, guess_x: int, iterations=3) -> int:
         lines.append(tangent)
     dct = {'function': line, 'range': [-1000, 1000]}
     plot_iterations(dct, lines)
-    return solve(lines[-1][0], x)[0]
+    return solve(lines[-1], x)[0]
 
 
 def plot_iterations(parent: dict, lines: list) -> None:
